@@ -1,0 +1,16 @@
+a='alem'
+b=20
+c=20.5
+d=1j
+e=[1,2,3]
+f=(1,2,3)
+j=range(3)
+h={"name":"Dilyara","age":17}
+i={1,2,3}
+g=frozenset({1,2,3})
+k=True
+l=b'hello'
+m=bytearray(2)
+n=memoryview(bytes(5))
+o=None
+print(str(type(a))+'\n'+str(type(b))+'\n'+str(type(c))+'\n'+str(type(d))+'\n'+str(type(e))+'\n'+str(type(f))+'\n'+str(type(j))+'\n'+str(type(h))+'\n'+str(type(i))+'\n'+str(type(g))+'\n'+str(type(k))+'\n'+str(type(l))+'\n'+str(type(m))+'\n'+str(type(n))+'\n'+str(type(o)))
