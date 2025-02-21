@@ -1,6 +1,6 @@
 def reverse_words():
-    user_input = input()
-    words = user_input.split() 
+    a = input()
+    words = a.split() 
     reversed_sentence = ' '.join(reversed(words)) 
     return reversed_sentence
 

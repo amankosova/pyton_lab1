@@ -1,9 +1,9 @@
 import itertools
 
-def string_permutations():
-    user_input = input()
-    permutations = itertools.permutations(user_input)
-    for perm in permutations:
-        print(''.join(perm))
+def p():
+    a = input()
+    permutations = itertools.permutations(a)
+    for i in permutations:
+        print(''.join(i))
 
-string_permutations()
+p()
