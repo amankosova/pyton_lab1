@@ -2,7 +2,6 @@ import pygame
 import time
 import math
 pygame.init()
-
 #пайда болатын экран ұзындықтары
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
