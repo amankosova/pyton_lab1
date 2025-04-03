@@ -10,7 +10,7 @@ bg_color = pygame.Color('white')
 
 ball_pos = [400, 300] #шардың пайда болу аймағы
 
-ball_radius = 25 #шар радиусы
+ball_radius = 25  #шар радиусы
 
 speed = 20 #шар жылдамдығы
 
