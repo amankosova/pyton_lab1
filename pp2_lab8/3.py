@@ -1,36 +1,34 @@
 import pygame 
  
- 
-WIDTH, HEIGHT = 1200, 800  #Defines the width and height of the game window.
-FPS = 90 #screen refresh rate
-draw = False   #indicating whether to draw on the screen           
-radius = 2    #Brush radius
-color = 'blue'           
+WIDTH, HEIGHT = 1200, 800 
+FPS = 90      #экранның жаңару жиілігі
+draw = False   #Бұл айнымалы экранда сурет салынатынын анықтайды          
+radius = 4    #щетка радиусы
+color = 'lime'           
 mode = 'pen'                
  
 pygame.init() 
-screen = pygame.display.set_mode([WIDTH, HEIGHT]) #Creating a window of specified sizes
-pygame.display.set_caption('Paint') #name window 
-clock = pygame.time.Clock() #for time management
-screen.fill(pygame.Color('white'))  #Fills the screen with white.
-font = pygame.font.SysFont('None', 60) #Creating a font to display text
+screen = pygame.display.set_mode([WIDTH, HEIGHT]) 
+pygame.display.set_caption('Painter') 
+clock = pygame.time.Clock() # уақытты басқару үшін 
+screen.fill(pygame.Color('white'))  #Экранды толығымен ақ түспен толтырады
+font = pygame.font.SysFont('None', 60)
  
  
-def drawLine(screen, start, end, width, color): 
-    # Extract x and y coordinates of start and end points
+def drawLine(screen, start, end, width, color):
     x1 = start[0] 
     x2 = end[0] 
     y1 = start[1] 
     y2 = end[1] 
     
-    # Calculate absolute differences in x and y coordinates
+    # айырмашылықты есептейді
     dx = abs(x1 - x2) 
     dy = abs(y1 - y2) 
     
-    # Coefficients for the line equation Ax + By + C = 0
-    A = y2 - y1  # Vertically
-    B = x1 - x2  # Horizontally
-    C = x2 * y1 - x1 * y2 
+    # коэф. Ax + By + C = 0
+    A = y2 - y1  # вертикально
+    B = x1 - x2  # горизонтально
+    C = x2 * y1 - x1 * y2  # сызықтың тұрақты мүшесі
     
     # If the line is more horizontal than vertical
     if dx > dy: 
@@ -38,9 +36,9 @@ def drawLine(screen, start, end, width, color):
         if x1 > x2: 
             x1, x2 = x2, x1 
             y1, y2 = y2, y1 
-        # Iterate over x coordinates
+        #  сызықтың бағытын дұрыс орнату үшін координаталар орын ауыстырылады
+# сызықтың әрбір x координаты үшін сәйкес келетін y координатын есептейді және экранға пиксель салады
         for x in range(x1, x2): 
-            # Calculate y coordinate using the line equation
             y = (-C - A * x) / B 
             # Draw a circle (pixel) at (x, y) position
             pygame.draw.circle(screen, pygame.Color(color), (x, y), width) 
@@ -61,47 +59,42 @@ def drawLine(screen, start, end, width, color):
  
 def drawCircle(screen, start, end, width, color): 
     # Extract x and y coordinates of start and end points
-    x1 = start[0]  # Extract x-coordinate of the start point
-    x2 = end[0]  # Extract x-coordinate of the end point
-    y1 = start[1]  # Extract y-coordinate of the start point
-    y2 = end[1]  # Extract y-coordinate of the end point
+    x1 = start[0]  
+    x2 = end[0]  
+    y1 = start[1]  
+    y2 = end[1]  
     
-    # Calculate the center of the circle
-    x = (x1 + x2) / 2  # Calculate the center of the circle along the x-axis
-    y = (y1 + y2) / 2  # Calculate the center of the circle along the y-axis
+    # шенбер центрин есептеу
+    x = (x1 + x2) / 2  # х бойынша
+    y = (y1 + y2) / 2  # у бойынша
     
-    # Calculate the radius of the circle
-    radius = abs(x1 - x2) / 2  # Calculate the radius of the circle
+    #шенбер радиусы
+    radius = abs(x1 - x2) / 2 
     
-    # Draw the circle on the screen
-    pygame.draw.circle(screen, pygame.Color(color), (x, y), radius, width)  # Draw the circle on the screen
-
+    # позицияга шенбер салу
+    pygame.draw.circle(screen, pygame.Color(color), (x, y), radius, width) 
  
  
 def drawRectangle(screen, start, end, width, color): 
-    # Extract x and y coordinates of start and end points
-    x1 = start[0]  # Extract x-coordinate of the start point
-    x2 = end[0]  # Extract x-coordinate of the end point
-    y1 = start[1]  # Extract y-coordinate of the start point
-    y2 = end[1]  # Extract y-coordinate of the end point
+    x1 = start[0]  
+    x2 = end[0]  
+    y1 = start[1]  
+    y2 = end[1] 
     
-    # Calculate the width and height of the rectangle
-    widthr = abs(x1 - x2)  # Calculate the width of the rectangle
-    height = abs(y1 - y2)  # Calculate the height of the rectangle
+    widthr = abs(x1 - x2)  # енин есептеу
+    height = abs(y1 - y2)  # бииктигин есептеу
     
-    # Draw the rectangle on the screen based on the position of start and end points
+    # Бастапқы және соңғы нүктелердің орналасуына қарай экранға тіктөртбұрыш салу
     if x2 > x1 and y2 > y1: 
-        pygame.draw.rect(screen, pygame.Color(color), (x1, y1, widthr, height), width)  # Draw the rectangle on the screen
+        pygame.draw.rect(screen, pygame.Color(color), (x1, y1, widthr, height), width)  
     if y2 > y1 and x1 > x2: 
-        pygame.draw.rect(screen, pygame.Color(color), (x2, y1, widthr, height), width)  # Draw the rectangle on the screen
+        pygame.draw.rect(screen, pygame.Color(color), (x2, y1, widthr, height), width)  
     if x1 > x2 and y1 > y2: 
-        pygame.draw.rect(screen, pygame.Color(color), (x2, y2, widthr, height), width)  # Draw the rectangle on the screen
+        pygame.draw.rect(screen, pygame.Color(color), (x2, y2, widthr, height), width)  
     if x2 > x1 and y1 > y2: 
-        pygame.draw.rect(screen, pygame.Color(color), (x1, y2, widthr, height), width)  # Draw the rectangle on the screen
+        pygame.draw.rect(screen, pygame.Color(color), (x1, y2, widthr, height), width) 
 
      
- 
- 
 def drawSquare(screen, start, end, color): 
     x1 = start[0] 
     x2 = end[0] 
@@ -140,9 +133,9 @@ def drawEquilateralTriangle(screen, start, end, width, color):
     x2 = end[0] 
     y1 = start[1] 
     y2 = end[1] 
- 
-    width_b = abs(x2 - x1) 
-    height = (3**0.5) * width_b / 2 
+ #Үшбұрыштың негізі мен биіктігін есептеу үшін формулалар қолданылады
+    width_b = abs(x2 - x1) #үшбұрыштың негізі
+    height = (3**0.5) * width_b / 2 # үшбұрыштың биіктігі
  
     if y2 > y1: 
         pygame.draw.polygon(screen, pygame.Color(color), ((x1, y2), (x2, y2), ((x1 + x2) / 2, y2 - height)), width) 
@@ -160,41 +153,40 @@ def drawRhombus(screen, start, end, width, color):
 while True: 
     for event in pygame.event.get():
         if event.type == pygame.QUIT: 
-            exit()  # Exit the program if the window is closed
+            exit()  #терезе жабылады
          
-        # Handling keyboard events
         if event.type == pygame.KEYDOWN: 
-            # Change the mode based on the pressed key
+            
             if event.key == pygame.K_r: 
-                mode = 'rectangle'  # Set the mode to draw rectangles
+                mode = 'rectangle'  #  draw rectangles
             if event.key == pygame.K_c: 
-                mode = 'circle'  # Set the mode to draw circles
+                mode = 'circle'  # draw circles
             if event.key == pygame.K_p: 
-                mode = 'pen'  # Set the mode to use a pen
+                mode = 'pen'  #  use a pen
             if event.key == pygame.K_e: 
-                mode = 'erase'  # Set the mode to erase
+                mode = 'erase'  #  erase
             if event.key == pygame.K_s: 
-                mode = 'square'  # Set the mode to draw squares
+                mode = 'square'  #  draw squares
             if event.key == pygame.K_q: 
                 screen.fill(pygame.Color('white'))  # Clear the screen by filling it with white color
  
             # Change the color based on the pressed key
             if event.key == pygame.K_1: 
-                color = 'black'  # Set the color to black
+                color = 'black'  #  black
             if event.key == pygame.K_2: 
-                color = 'green'  # Set the color to green
+                color = 'green'  #o green
             if event.key == pygame.K_3: 
-                color = 'red'  # Set the color to red
+                color = 'red'  #  red
             if event.key == pygame.K_4: 
-                color = 'blue'  # Set the color to blue
+                color = 'blue'  #  blue
             if event.key == pygame.K_5: 
-                color = 'yellow'  # Set the color to yellow
+                color = 'yellow'  #  yellow
             if event.key == pygame.K_t: 
-                mode = 'right_tri'  # Set the mode to draw right triangles
+                mode = 'right_tri'  #  draw right triangles
             if event.key == pygame.K_u: 
-                mode = 'eq_tri'  # Set the mode to draw equilateral triangles
+                mode = 'eq_tri'  #  draw equilateral triangles
             if event.key == pygame.K_h: 
-                mode = 'rhombus'  # Set the mode to draw rhombuses
+                mode = 'rhombus'  #  draw rhombuses
    
  
       
@@ -202,7 +194,9 @@ while True:
             draw = True  # Enable drawing
             if mode == 'pen': 
                 pygame.draw.circle(screen, pygame.Color(color), event.pos, radius)  # Draw a circle (pixel) if the pen mode is active
-            prevPos = event.pos  # Store the current position as the previous position
+            prevPos = event.pos  # Бастапқы орын ретінде тышқанның орын ауыстыруын сақтаймыз.
+
+
 
  
         
@@ -230,12 +224,14 @@ while True:
                 drawLine(screen, lastPos, event.pos, radius, color)  # If drawing is enabled and pen mode is active, draw a line between the last position and the current position
             elif draw and mode == 'erase': 
                 drawLine(screen, lastPos, event.pos, radius, 'white')  # If drawing is enabled and erase mode is active, draw a white line (erase) between the last position and the current position
-            lastPos = event.pos  # Update the last position to the current position
+            lastPos = event.pos  # Әр қозғалыста соңғы орынды жаңартып отыру үшін.
  
-    # Draw a rectangle to display the radius information
-    pygame.draw.rect(screen, pygame.Color('white'), (5, 5, 115, 75))  # Draw a white rectangle to display the radius information
-    renderRadius = font.render(str(radius), True, pygame.Color(color))  # Render the text showing the current radius
-    screen.blit(renderRadius, (5, 5))  # Blit the rendered text onto the screen at the specified position
+
+    pygame.draw.rect(screen, pygame.Color('white'), (5, 5, 115, 75))  # Экранның жоғарғы бұрышында радиус мәнін көрсету үшін ақ түсті төртбұрыш салынған.
+    renderRadius = font.render(str(radius), True, pygame.Color(color))  # Қазіргі радиус мәнін текст ретінде өңдеу.
+
+
+    screen.blit(renderRadius, (1120, 5))  #Текстті экранға белгілі бір орынға (1120, 5) орналастыру.
  
-    pygame.display.flip()  # Update the display
-    clock.tick(FPS)  # Control the frame rate
+    pygame.display.flip()  # дисплей жанартады
+    clock.tick(FPS)  # Экран жаңаруының жиілігін бақылау

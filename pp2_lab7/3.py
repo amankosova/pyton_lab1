@@ -5,12 +5,12 @@ pygame.init()
 window_size = (800, 600) 
 screen = pygame.display.set_mode(window_size) 
 pygame.display.set_caption("Draw circle")
-ball_color = pygame.Color('red')
-bg_color = pygame.Color('white')
+ball_color = pygame.Color('magenta')
+bg_color = pygame.Color('cyan')
 
 ball_pos = [400, 300] #шардың пайда болу аймағы
 
-ball_radius = 25  #шар радиусы
+ball_radius = 33  #шар радиусы
 
 speed = 20 #шар жылдамдығы
 
@@ -28,7 +28,7 @@ while True:
         ball_pos[0] = max(ball_pos[0] - speed, ball_radius)
     if keys[pygame.K_RIGHT]:
         ball_pos[0] = min(ball_pos[0] + speed, window_size[0] - ball_radius)
-    
+    #Экранды фон түсімен толтырады, яғни экранды тазалайды
     screen.fill(bg_color)
     pygame.draw.circle(screen, ball_color, ball_pos, ball_radius)
     pygame.display.flip()

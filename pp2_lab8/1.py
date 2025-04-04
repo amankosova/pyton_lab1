@@ -1,12 +1,12 @@
-# Imports
+#sys-Python жүйесін басқару үшін қажет кітапхана.бағдарламаны аяқтау
+# или жүйемен басқа да әрекеттерді орындау үшін қолданылады
 import pygame, sys
 from pygame.locals import *
 import random, time
 
-# Initialzing
 pygame.init()
 
-# FPS
+# FPS-Ойынның секундына көрсетілетін кадрлар саны
 FPS =60
 FramePerSec = pygame.time.Clock()
 
@@ -17,23 +17,23 @@ GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-# Other Variables for use in the program
+
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
-SPEED = 3
+SPEED = 5
 SCORE = 0
 COINS = 0
 
 
 # Setting up Fonts
-font = pygame.font.SysFont("Verdana", 20)
+font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
 game_over = font.render("Game Over", True, BLACK)
 
 background = pygame.image.load("AnimatedStreet.png")
 
-# Create a white screen
 screen = pygame.display.set_mode((400, 600))
+#Экранды ақ түспен толтырады
 screen.fill(WHITE)
 pygame.display.set_caption("Racer")
 
@@ -42,11 +42,13 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load("Enemy.png")
+        #Позициясын анықтайтын тіктөртбұрыш құрылады
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
 
     def move(self):
         global SCORE
+        #Қарсылас көлігі төмен жылжиды
         self.rect.move_ip(0, SPEED)
         if (self.rect.top > 600):
             SCORE += 1
@@ -151,6 +153,8 @@ def game_over_screen():
                     return False
 
 def handle_crash():
+    #ойыншы мен жаудың соқтығысқан кезде 
+    # екі секундтық кідіріспен экранды жаңартады
     time.sleep(2)
 
 background_y = 0  # Initialize background y-coordinate

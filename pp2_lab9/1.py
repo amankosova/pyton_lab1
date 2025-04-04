@@ -1,9 +1,7 @@
-# Imports
 import pygame, sys
 from pygame.locals import *
 import random, time
 
-# Initialzing
 pygame.init()
 
 # FPS
@@ -20,13 +18,13 @@ WHITE = (255, 255, 255)
 # Other Variables for use in the program
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
-SPEED = 3
+SPEED = 5
 SCORE = 0
 COINS = 0
 
 
 # Setting up Fonts
-font = pygame.font.SysFont("Verdana", 20)
+font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
 game_over = font.render("Game Over", True, BLACK)
 

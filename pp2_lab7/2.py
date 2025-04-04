@@ -6,6 +6,7 @@ pygame.init()
 playlist = []
 # музыкалар орналасқан жерге path 
 music_folder = r"C:\Users\zenbo\OneDrive\Рабочий стол\pp2\pp2_lab7\musics"
+#берілген папкадағы барлық файлдар мен қалталарды тізімге қосады
 allmusic = os.listdir(music_folder)
 
 # playlist-қа .mp3 деп аяқталса қосамыз 
@@ -14,18 +15,20 @@ for song in allmusic:
         playlist.append(os.path.join(music_folder, song))
 # экран бетіне шағатын терезе көлемі, аты
 screen = pygame.display.set_mode((800, 800))
-pygame.display.set_caption("Darkhan-Juzz")
+pygame.display.set_caption("Blackpink")
 clock = pygame.time.Clock()
 
 # артқы фонды енгіземіз
-background = pygame.image.load(os.path.join("music-elements", "background.png"))
+background = pygame.image.load(os.path.join("music-elements", "bp.png"))
+background = pygame.transform.scale(background,(800,800))
 
 # кнопкалар тұратын жердің фонын жасаймыз, алдымен көлемі, сосын RGB ақ түс
+#бұл функция графикалық алаң жасайды
 bg = pygame.Surface((500, 200))
 bg.fill((255, 255, 255))
 
 # плейлист аты шығып тұратын жер көлемі
-font2 = pygame.font.SysFont(None, 20)
+font2 = pygame.font.SysFont(None, 40)
 
 # кнопкаларды папкадан енгіземіз
 playb = pygame.image.load(os.path.join("music-elements", "play.png"))
@@ -70,7 +73,7 @@ while run:
     text2 = font2.render(os.path.basename(playlist[index]), True, (20, 20, 50))
     
     # әр кнопканың орналасуын, көлемін көрсетеміз
-    screen.blit(background, (-50, 0))
+    screen.blit(background, (0, 0))
     screen.blit(bg, (155, 500))
     screen.blit(text2, (365, 520))
     playb = pygame.transform.scale(playb, (70, 70))

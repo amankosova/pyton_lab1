@@ -1,9 +1,9 @@
 import pygame 
 import time
-import math
 pygame.init()
 #пайда болатын экран ұзындықтары
 screen = pygame.display.set_mode((800, 600))
+#экран жаңарту жылдамдығын басқару үшін қолданылады
 clock = pygame.time.Clock()
 
 #пайда болған экранның жоғар жағындағы атау
@@ -33,8 +33,9 @@ while not done:
     #экран бетіне пайда фонмен болуы
     screen.blit(mainclock, (0,0))
     
-    #оң қол минутты орналастыру
+    #оң қол минутты орналастыру,оң қолдың суреті бұрылады
     rotated_rightarm = pygame.transform.rotate(pygame.transform.scale(rightarm, (800, 600)), -minute_angle)
+    #Оң қолдың орналасқан жері анықталады
     rightarmrect = rotated_rightarm.get_rect(center=(800 // 2, 600 // 2 + 12))
     screen.blit(rotated_rightarm, rightarmrect)
     
