@@ -1,6 +1,7 @@
 import os
 path="C:/Users/zenbo/OneDrive/Рабочий стол/pp2"
 d=[i for i in os.listdir(path) if os.path.isdir(os.path.join(path , i))]
+# os.listdir(path)-көрсетілген path жолындағы барлық файлдар мен директорийлердің атауларын қайтарады
 print("directory:")
 for i in d:
     print(i)

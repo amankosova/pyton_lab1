@@ -9,7 +9,7 @@ music_folder = r"C:\Users\zenbo\OneDrive\Рабочий стол\pp2\pp2_lab7\mu
 #берілген папкадағы барлық файлдар мен қалталарды тізімге қосады
 allmusic = os.listdir(music_folder)
 
-# playlist-қа .mp3 деп аяқталса қосамыз 
+# playlist-қа .mp3 деп аяқталса қосамыз  
 for song in allmusic:
     if song.endswith(".mp3"):
         playlist.append(os.path.join(music_folder, song))

@@ -132,8 +132,8 @@ all_sprites.add(E1)
 all_sprites.add(C1)
 
 # Adding a new User event
-INC_SPEED = pygame.USEREVENT + 1
-pygame.time.set_timer(INC_SPEED, 1000)
+INC_SPEED = pygame.USEREVENT + 1  # Жаңа оқиға қосу
+pygame.time.set_timer(INC_SPEED, 1000)  # Осы оқиғаны әр 1000 миллисекунд сайын шақыру
 
 
 def game_over_screen():
@@ -162,6 +162,7 @@ background_y = 0  # Initialize background y-coordinate
 while True:
     for event in pygame.event.get():
         if event.type == INC_SPEED:
+            # Егер уақытша оқиға орын алса
             SPEED += 0.1
         if event.type == QUIT:
             pygame.quit()
@@ -174,31 +175,32 @@ while True:
             pygame.quit()
             sys.exit()
 
-    # Scroll the background
+    # Scroll the background Бұл код фонды жылжытуға арналған
     background_y = (background_y + SPEED) % background.get_height()
 
     # Draw the background at the calculated position
     screen.blit(background, (0, background_y))
     screen.blit(background, (0, background_y - background.get_height()))
-
+ # Ұпайды экранға шығару
     scores = font_small.render(str(SCORE), True, BLACK)
     screen.blit(scores, (10, 10))
-
+# Монеталарды экранға шығару
     coins = font_small.render(str(COINS), True, BLACK)
     screen.blit(coins, (370, 10))
 
-    # Moves and Re-draws all Sprites
+    # Әрбір спрайтты экранға салады
     for entity in all_sprites:
         screen.blit(entity.image, entity.rect)
 
-        # Increase the number of coins if collision with player happened
+        # Егер ойыншы монетаны алған болса
         if entity == C1:
             if pygame.sprite.spritecollideany(P1, coinss):
                 entity.move()
         else:
+            # Басқа спрайттар қозғалады
             entity.move()
 
-    # Move the second random car
+    # Жауды жылжыту
     for enemy in enemies:
         enemy.move()
 
@@ -206,10 +208,11 @@ while True:
     for coin in coinss:
         coin.rect.y += SPEED
 
-        # Respawn coins if they go off-screen
+        
         if coin.rect.top > SCREEN_HEIGHT:
+            # Егер монета экранның төменгі шегінен өтіп кетсе
             coin.rect.y = -coin.rect.height
             coin.rect.x = random.randint(40, SCREEN_WIDTH - 40)
 
     pygame.display.update()
-    FramePerSec.tick(FPS)
+    FramePerSec.tick(FPS)# FPS-ті бақылау
