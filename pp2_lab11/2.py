@@ -1,27 +1,6 @@
 import psycopg2
 import csv
-"""
-CREATE OR REPLACE PROCEDURE insert_or_update_user(
-    p_name VARCHAR,
-    p_age INT,
-    p_phone VARCHAR
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    -- Нөмірдің қайталануын тексеру
-    IF NOT EXISTS (SELECT 1 FROM phonebook WHERE phone = p_phone) THEN
-        INSERT INTO phonebook (name, age, phone)
-        VALUES (p_name, p_age, p_phone);
-    ELSE
-        UPDATE phonebook
-        SET name = p_name, age = p_age
-        WHERE phone = p_phone;
-    END IF;
-END;
-$$;
 
-"""
 def connect():
     return psycopg2.connect(
         database="lab10", user="postgres", password="270807", host="localhost", port="5432"

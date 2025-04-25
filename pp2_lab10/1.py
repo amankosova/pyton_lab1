@@ -1,181 +1,121 @@
 import psycopg2
 import csv
-from tabulate import tabulate 
-# PostgreSQL дерекқорына қосылу
-conn = psycopg2.connect(host="localhost", dbname = "lab10", user = "postgres",
+from tabulate import tabulate
+def connect():
+    return psycopg2.connect(host="localhost", dbname = "lab10", user = "postgres",
                         password = "270807", port = 5432)
-#SQL сұраныстарын орындау үшін курсор жасау
-cur = conn.cursor()
-
-cur.execute("""CREATE TABLE IF NOT EXISTS phonebook (
-      user_id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      surname VARCHAR(255) NOT NULL, 
-      phone VARCHAR(255) NOT NULL
+def create_table():
+    conn=connect()
+    cur=conn.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS phonebook (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(50) NOT NULL,
+      age INT NOT NULL,
+      phone VARCHAR(25) NOT NULL
 
 )
 """)
-check = True
-command = ''
-temp = ''
+    conn.commit()
+    cur.close()
+    conn.close()
+def show():
+    conn=connect()
+    cur=conn.cursor()
+    cur.execute("select * from phonebook")
+    all=cur.fetchall()
+    print(tabulate(all,headers=["ID","NAME","AGE","PHONE"],tablefmt='fancy_grid'))
+    conn.commit()
+    cur.close()
+    conn.close()
 
-name_var = ''
-surname_var = ''
-phone_var = ''
-id_var = ''
-
-start = True
-back = False
-
-back_com = ''
-name_upd = ''
-surname_upd = ''
-phone_upd = ''
-
-filepath = ''
-
-while check:
-    if start == True or back == True:
-        start = False
+def insert():
+    name=input("Name:")
+    age=input("age:")
+    phone=input("phone:")
+    conn=connect()
+    cur=conn.cursor()
+    cur.execute("Insert into phonebook (name,age,phone) Values (%s ,%s,%s)",(name,age,phone))
+    conn.commit()
+    cur.close()
+    conn.close()
+    print("Inserted successfully.\n")
+def insert_csv():
+    conn=connect()
+    cur=conn.cursor()
+    path=input("CSV file path:")
+    with open(path,"r") as f:
+        file=csv.reader(f)
+        next(file)
+        for i in file:
+          cur.execute("Insert into phonebook (name,age,phone) values (%s,%s,%s)",(i[0],i[1],i[2]))
+    conn.commit()  
+    cur.close()
+    conn.close()
+    print("CSV data inserted successfully.\n")
+def update():
+    conn=connect()
+    cur=conn.cursor()
+    column = input('Type the name of the column that you want to change: ')
+    value = input(f"Enter {column} that you want to change: ")
+    new_value = input(f"Enter the new {column}: ")
+    cur.execute(f"UPDATE phonebook SET {column} = %s WHERE {column} = %s", (new_value, value))
+    conn.commit()
+    cur.close()
+    conn.close()
+    print("Updated successfully.\n")
+def query():
+    col = input("Search by (name/age/phone): ").lower()
+    val = input(f"Enter {col}: ")
+    if col == 'age':
+        val = int(val)
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute(f"SELECT * FROM phonebook WHERE {col} = %s", (val,))
+    for row in cur.fetchall():
+        print(f"ID: {row[0]}, Name: {row[1]}, Age: {row[2]}, Phone: {row[3]}")
+    cur.close()
+    conn.close()
+def delete():
+    choice = input("Delete by: name /age/ phone").lower()
+    value = input(f"Enter the {choice} to delete: ")
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute(f"DELETE FROM phonebook WHERE {choice} = %s", (value,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    print("Deleted successfully.\n")
+def main():
+    create_table()
+    while True:
         print("""
-        List of the commands:
-        1. Type "i" or "I" in order to INSERT data to the table.
-        2. Type "u" or "U" in order to UPDATE data in the table.
-        3. Type "q" or "Q" in order to make specidific QUERY in the table.
-        4. Type "d" or "D" in order to DELETE data from the table.
-        5. Type "f" or "F" in order to close the program.
-        6. Type "s" or "S" in order to see the values in the table.
+        ==== PhoneBook Menu ====
+        1 - Insert from console
+        2 - Insert from CSV
+        3 - Update phone
+        4 - Search data
+        5 - Delete user
+        6 - Show table
+        0 - Exit
         """)
-        command = str(input())
-        
-        #insert
-        if command == "i" or command == "I":
-            print('Type "csv" or "con" to choose option between uploading csv file or typing from console: ')
-            command = ''
-            temp = str(input())
-            if temp == "con":
-                name_var = str(input("Name: "))
-                surname_var = str(input("Surname: "))
-                phone_var = str(input("Phone: "))
-                cur.execute("INSERT INTO phonebook (name, surname, phone) VALUES (%s, %s, %s)", (name_var, surname_var, phone_var))
-                conn.commit()
-                back_com = str(input('Type "back" in order to return to the list of the commands: '))
-                if back_com == "back":
-                    back = True
-            if temp == "csv":
-                filepath = input("Enter a file path with proper extension: ")
-                with open(str(filepath), 'r') as f:
-                # Skip the header row.
-                    reader = csv.reader(f)
-                    next(reader)
-                    for row in reader:
-                        cur.execute("INSERT INTO phonebook (name, surname, phone) VALUES (%s, %s, %s)", (row[0], row[1], row[2]))
-                conn.commit()
+        choice = input("Choose an option: ")
 
-                    
-                back_com = str(input('Type "back" in order to return to the list of the commands: '))
-                if back_com == "back":
-                    back = True
+        if choice == '1':
+            insert()
+        elif choice == '2':
+            insert_csv()
+        elif choice == '3':
+            update()
+        elif choice == '4':
+            query()
+        elif choice == '5':
+            delete()
+        elif choice == '6':
+            show()
+        elif choice == '0':
+            print("Finish")
+            break
+        else:
+            print("Invalid choice!\n")
 
-        #delete
-        if command == "d" or command == "D":
-            back = False
-            command = ''
-            phone_var = str(input('Type phone number which you want to delete: '))
-            cur.execute("DELETE FROM phonebook WHERE phone = %s", (phone_var,))
-            conn.commit()
-            back_com = str(input('Type "back" in order to return to the list of the commands: '))
-            if back_com == "back":
-                back = True
-        
-        #update
-        if command == 'u' or command == 'U':
-            back = False
-            command = ''
-            temp = str(input('Type the name of the column that you want to change: '))
-            if temp == "name":
-                name_var = str(input("Enter name that you want to change: "))
-                name_upd = str(input("Enter the new name: "))
-                cur.execute("UPDATE phonebook SET name = %s WHERE name = %s", (name_upd, name_var))
-                conn.commit()
-                back_com = str(input('Type "back" in order to return to the list of the commands: '))
-                if back_com == "back":
-                    back = True
-
-            if temp == "surname":
-                surname_var = str(input("Enter surname that you want to change: "))
-                surname_upd = str(input("Enter the new surname: "))
-                cur.execute("UPDATE phonebook SET surname = %s WHERE surname = %s", (surname_upd, surname_var))
-                back_com = str(input('Type "back" in order to return to the list of the commands: '))
-                if back_com == "back":
-                    back = True
-
-            if temp == "phone":
-                name_var = str(input("Enter phone number that you want to change: "))
-                name_upd = str(input("Enter the new phone number: "))
-                cur.execute("UPDATE phonebook SET phone = %s WHERE phone = %s", (phone_upd, phone_var))
-                back_com = str(input('Type "back" in order to return to the list of the commands: '))
-                if back_com == "back":
-                    back = True
-        
-        #query
-        if command == "q" or command == "Q":
-            back = False
-            command = ''
-            temp = str(input("Type the name of the column which will be used for searching data: "))
-            if temp == "id":
-                id_var = str(input("Type id of the user: "))
-                cur.execute("SELECT * FROM phonebook WHERE user_id = %s", (id_var, ))
-                rows = cur.fetchall()
-                print(tabulate(rows, headers=["ID", "Name", "Surname", "Phone"]))
-                back_com = str(input('Type "back" in order to return to the list of the commands: '))
-                if back_com == "back":
-                    back = True
-            
-            if temp == "name":
-                name_var = str(input("Type name of the user: "))
-                cur.execute("SELECT * FROM phonebook WHERE name = %s", (name_var, ))
-                rows = cur.fetchall()
-                print(tabulate(rows, headers=["ID", "Name", "Surname", "Phone"]))
-                back_com = str(input('Type "back" in order to return to the list of the commands: '))
-                if back_com == "back":
-                    back = True
-            
-            if temp == "surname":
-                surname_var = str(input("Type surname of the user: "))
-                cur.execute("SELECT * FROM phonebook WHERE surname = %s", (surname_var, ))
-                rows = cur.fetchall()
-                print(tabulate(rows, headers=["ID", "Name", "Surname", "Phone"]))
-                back_com = str(input('Type "back" in order to return to the list of the commands: '))
-                if back_com == "back":
-                    back = True
-                
-            if temp == "phone":
-                phone_var = str(input("Type phone number of the user: "))
-                cur.execute("SELECT * FROM phonebook WHERE phone = %s", (phone_var, ))
-                rows = cur.fetchall()
-                print(tabulate(rows, headers=["ID", "Name", "Surname", "Phone"]))
-                back_com = str(input('Type "back" in order to return to the list of the commands: '))
-                if back_com == "back":
-                    back = True
-
-        
-        #display
-        if command == "s" or command == "S":
-            back = False
-            command = ''
-            cur.execute("SELECT * from phonebook;")
-            rows = cur.fetchall()
-            print(tabulate(rows, headers=["ID", "Name", "Surname", "Phone"], tablefmt='fancy_grid'))
-            back_com = str(input('Type "back" in order to return to the list of the commands: '))
-            if back_com == "back":
-                back = True
-        #finish
-        if command == "f" or command == "F":
-            command = ''
-            check = False
-        
-
-conn.commit()
-cur.close()
-conn.close()
+main()
